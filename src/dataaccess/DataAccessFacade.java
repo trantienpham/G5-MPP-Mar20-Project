@@ -10,19 +10,20 @@ import java.util.HashMap;
 import java.util.List;
 
 import business.Book;
-import business.BookCopy;
 import business.LibraryMember;
-import dataaccess.DataAccessFacade.StorageType;
+import business.User;
 
 
 public class DataAccessFacade implements DataAccess {
 	
 	enum StorageType {
-		BOOKS, MEMBERS, USERS;
+		BOOKS, COPIED_BOOKS, MEMBERS, AUTHORS, CHECKOUT_RECORDS, CHECKOUT_ENTRIES, USERS, FINES;
 	}
 	
+	public static final String SEPARATOR = System.getProperty("file.separator");
+	
 	public static final String OUTPUT_DIR = System.getProperty("user.dir") 
-			+ "\\src\\dataaccess\\storage";
+			+ SEPARATOR + "src"+ SEPARATOR+ "dataaccess"+ SEPARATOR + "storage";
 	public static final String DATE_PATTERN = "MM/dd/yyyy";
 	
 	//implement: other save operations

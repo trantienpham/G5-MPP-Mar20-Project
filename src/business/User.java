@@ -1,4 +1,4 @@
-package dataaccess;
+package business;
 
 import java.io.Serializable;
 
@@ -10,7 +10,7 @@ final public class User implements Serializable {
 	
 	private String password;
 	private Auth authorization;
-	User(String id, String pass, Auth  auth) {
+	public User(String id, String pass, Auth  auth) {
 		this.id = id;
 		this.password = pass;
 		this.authorization = auth;

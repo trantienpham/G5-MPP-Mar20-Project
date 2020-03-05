@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import business.Book;
 import business.LibraryMember;
-import dataaccess.DataAccessFacade.StorageType;
+import business.User;
 
 public interface DataAccess { 
 	public HashMap<String,Book> readBooksMap();

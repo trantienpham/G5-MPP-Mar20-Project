@@ -1,4 +1,4 @@
-package dataaccess;
+package business;
 
 import java.io.Serializable;
 
