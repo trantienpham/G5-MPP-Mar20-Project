@@ -68,7 +68,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="editMemberButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleEditMemberButtonAction" prefHeight="70.0" prefWidth="310.0" text="Edit Member" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Button fx:id="memberButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleEditMemberButtonAction" prefHeight="70.0" prefWidth="310.0" text="Members" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <font>
                   <Font size="24.0" />
                </font>

@@ -79,7 +79,8 @@ public class FormMemberController extends FormBaseController {
         try {
         	ControllerInterface ci = new SystemController();
             ci.saveNewMember(libraryMember);
-            Message.showSuccessMessage("Add Member", "Saving Member Sucess", "");            
+            Message.showSuccessMessage("Add Member", "Saving Member Sucess", "");
+            clear();
         } catch (Exception ex) {
             Message.showErrorMessage("Add Member", "Saving Member Failed. Exception message: ",  ex.getMessage());          
             
@@ -87,7 +88,15 @@ public class FormMemberController extends FormBaseController {
         
     }
 
-
+	void clear() {
+		firstName.setText("");
+		lastName.setText("");
+		phoneNumber.setText("");
+		street.setText("");
+		city.setValue(null);
+		state.setValue(null);
+		zip.setText("");
+	}
 	@Override
 	void validateAllFields() {
 		//validate firstName
@@ -213,6 +222,13 @@ public class FormMemberController extends FormBaseController {
 
 	public void setMember(LibraryMember member) {
 		this.member = member;
+    	street.setText(this.member.getAddress().getStreet());
+    	city.setValue(this.member.getAddress().getCity());
+    	state.setValue(this.member.getAddress().getState());
+    	zip.setText(this.member.getAddress().getZip());
+    	firstName.setText(this.member.getFirstName());
+    	lastName.setText(this.member.getLastName());
+    	phoneNumber.setText(this.member.getTelephone());
 	}
 
 }

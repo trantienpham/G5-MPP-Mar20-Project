@@ -3,7 +3,7 @@ package ui.controllers;
 import java.util.Optional;
 
 import business.Auth;
-import business.LibraryMember;
+import business.SystemController;
 import business.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -28,7 +28,7 @@ public class DashboardController {
     private Button addMemberButton;
 
     @FXML
-    private Button editMemberButton;
+    private Button memberButton;
 
     @FXML
     private Button addBookButton;
@@ -55,9 +55,8 @@ public class DashboardController {
         checkoutButton.setDisable(true);
         checkoutRecordButton.setDisable(true);
         addMemberButton.setDisable(true);
-        editMemberButton.setDisable(true);
+        memberButton.setDisable(true);
         addBookButton.setDisable(true);
-        books.setDisable(true);
         
         if (user.getAuthorization() == Auth.BOTH)
             role = "ADMINISTRATOR/LIBRARIAN";
@@ -66,20 +65,19 @@ public class DashboardController {
         userLoggedLabel.setText(user.getId() + " (" + role.toLowerCase() + ")");
         if ((auth == Auth.ADMIN) || (auth == Auth.BOTH) ) {
             addMemberButton.setDisable(false);
-            editMemberButton.setDisable(false);
+            addBookButton.setDisable(false);
+            memberButton.setDisable(false);
         }
 
         if ((auth == Auth.LIBRARIAN) || (auth == Auth.BOTH) ) {
             checkoutButton.setDisable(false);
             checkoutRecordButton.setDisable(false);
-            addBookButton.setDisable(false);
-            books.setDisable(false);
         }
 	}
 	public User getUser() {
 		return user;
 	}
-	private Object launchForm(String formURL) throws Exception {
+	private void launchForm(String formURL) throws Exception {
        Stage stage = new Stage();
        FXMLLoader loader = new FXMLLoader(getClass().getResource(formURL));
        Parent root = (Parent) loader.load();
@@ -88,10 +86,10 @@ public class DashboardController {
        stage.setScene(scene);
        stage.setResizable(false);
        stage.show();
-       return loader.getController();
 	}
     @FXML
     public void handleLogoffButtonAction(ActionEvent event) throws Exception {
+    	SystemController.currentAuth = null;
     	showLogin();
     }
 
@@ -126,9 +124,7 @@ public class DashboardController {
     
     @FXML
     public void handleEditMemberButtonAction(ActionEvent event) throws Exception {
-    	FormMemberController controller = (FormMemberController) launchForm("/ui/views/FormMember.fxml");
-        LibraryMember member = null;
-        controller.setMember(member);
+    	launchForm("/ui/views/Members.fxml");
     }
 
     @FXML

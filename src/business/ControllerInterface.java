@@ -10,5 +10,7 @@ public interface ControllerInterface {
 	public List<String> allBookIds();
 	public List<Book> allBooks();
 	public void saveNewMember(LibraryMember member);
-	
+	public void addBook(Book book);
+	public List<CheckoutEntry> allCheckoutEntries();
+	public List<CheckoutRecord> allCheckoutRecords();
 }

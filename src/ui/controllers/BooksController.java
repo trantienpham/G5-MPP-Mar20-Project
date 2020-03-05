@@ -2,6 +2,7 @@ package ui.controllers;
 
 import java.util.List;
 
+import business.Auth;
 import business.Book;
 import business.ControllerInterface;
 import business.SystemController;
@@ -27,7 +28,7 @@ public class BooksController {
 	public void initialize() {
         TableColumn<Book, String> isbn = (TableColumn<Book, String>) getTableColumnByName(booksTableView, "ISBN");
         TableColumn<Book, String> title = (TableColumn<Book, String>) getTableColumnByName(booksTableView, "Title");
-//        TableColumn<Book, String> authors = (TableColumn<Book, String>) getTableColumnByName(booksTableView, "Authors");
+        TableColumn<Book, String> authors = (TableColumn<Book, String>) getTableColumnByName(booksTableView, "Authors");
         TableColumn<Book, String> add_copy = (TableColumn<Book, String>) getTableColumnByName(booksTableView, "Add Copy");
         
         ControllerInterface ci = new SystemController();
@@ -36,6 +37,8 @@ public class BooksController {
         
         isbn.setCellValueFactory(new PropertyValueFactory<Book, String>("isbn"));
         title.setCellValueFactory(new PropertyValueFactory<Book, String>("title"));
+        boolean isVisible = SystemController.currentAuth != null && (SystemController.currentAuth == Auth.ADMIN || SystemController.currentAuth == Auth.BOTH);
+        add_copy.setVisible(isVisible);
         add_copy.setCellValueFactory(new PropertyValueFactory<Book, String>("isbn"));
         add_copy.setCellFactory(new Callback<TableColumn<Book, String>, TableCell<Book, String>>() {
             @Override

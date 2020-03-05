@@ -4,10 +4,12 @@ import java.io.Serializable;
 
 final public class LibraryMember extends Person implements Serializable {
 	private String memberId;
+	private String fullname;
 	private CheckoutRecord checkoutRecord;
 
 	public LibraryMember(String memberId, String fname, String lname, String tel,Address add) {
 		super(fname,lname, tel, add);
+		this.fullname = fname + " " + lname;
 		this.memberId = memberId;		
 	}
 	
@@ -21,6 +23,10 @@ final public class LibraryMember extends Person implements Serializable {
 	
 	public String getMemberId() {
 		return memberId;
+	}
+	
+	public String getFullname() {
+		return fullname;
 	}
 
 	

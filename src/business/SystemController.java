@@ -33,6 +33,7 @@ public class SystemController implements ControllerInterface {
 		if(!passwordFound.equals(password)) {
 			throw new LoginException("Password incorrect");
 		}
+		currentAuth = map.get(id).getAuthorization();
 		return map.get(id);
 		
 	}
@@ -73,5 +74,26 @@ public class SystemController implements ControllerInterface {
 	public void saveNewMember(LibraryMember member) {
 		DataAccess da = new DataAccessFacade();
 		da.saveNewMember(member);
+	}
+	
+	@Override
+	public List<CheckoutEntry> allCheckoutEntries() {
+		DataAccess da = new DataAccessFacade();
+		List<CheckoutEntry> retval = new ArrayList<CheckoutEntry>();
+		retval.addAll(da.readCheckoutEntryMap().values());
+		return retval;
+	}
+	
+	@Override
+	public List<CheckoutRecord> allCheckoutRecords() {
+		DataAccess da = new DataAccessFacade();
+		List<CheckoutRecord> retval = new ArrayList<CheckoutRecord>();
+		retval.addAll(da.readCheckoutRecordMap().values());
+		return retval;
+	}
+	@Override
+	public void addBook(Book book) {
+		DataAccess da = new DataAccessFacade();
+		da.saveNewBook(book);
 	}
 }

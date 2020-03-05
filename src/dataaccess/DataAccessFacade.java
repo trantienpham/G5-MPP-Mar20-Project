@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import business.Book;
+import business.CheckoutEntry;
+import business.CheckoutRecord;
 import business.LibraryMember;
 import business.User;
 
@@ -34,6 +36,14 @@ public class DataAccessFacade implements DataAccess {
 		saveToStorage(StorageType.MEMBERS, mems);	
 	}
 	
+	@Override
+	public void saveNewBook(Book book) {
+		HashMap<String, Book> books = readBooksMap();
+		String isbn = book.getIsbn();
+		books.put(isbn, book);
+		saveToStorage(StorageType.BOOKS, books);	
+	}
+	
 	@SuppressWarnings("unchecked")
 	public  HashMap<String,Book> readBooksMap() {
 		//Returns a Map with name/value pairs being
@@ -55,6 +65,19 @@ public class DataAccessFacade implements DataAccess {
 		//Returns a Map with name/value pairs being
 		//   userId -> User
 		return (HashMap<String, User>)readFromStorage(StorageType.USERS);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public HashMap<String, CheckoutEntry> readCheckoutEntryMap() {
+		return (HashMap<String, CheckoutEntry>)readFromStorage(StorageType.CHECKOUT_ENTRIES);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public HashMap<String, CheckoutRecord> readCheckoutRecordMap() {
+		HashMap<String, CheckoutRecord> data = (HashMap<String, CheckoutRecord>)readFromStorage(StorageType.CHECKOUT_RECORDS);
+		if (data == null) data = new HashMap<String, CheckoutRecord>();
+		return data;
 	}
 	
 	

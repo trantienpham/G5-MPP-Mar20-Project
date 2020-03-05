@@ -1,10 +1,24 @@
 package ui.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import business.Author;
+import business.Book;
+import business.ControllerInterface;
+import business.SystemController;
+import dataaccess.TestData;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import utils.Message;
 import utils.Validators;
 
 public class AddBookController extends FormBaseController {
@@ -20,34 +34,72 @@ public class AddBookController extends FormBaseController {
     @FXML
     private Button btnSave;
     
+    @FXML
+    private ListView<Author> listAuthor;
+    
      
     public void initialize() {        
-        cmbCheckoutLength.getItems().addAll(7, 21); //possible values of the comboBox
-        cmbCheckoutLength.setValue(7);//set default
+        cmbCheckoutLength.getItems().addAll(7, 21);
+        cmbCheckoutLength.setValue(7);
+        listAuthor.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        listAuthor.setCellFactory(new Callback<ListView<Author>, ListCell<Author>>(){
+			@Override
+			public ListCell<Author> call(ListView<Author> author) {
+				final ListCell<Author> cell = new ListCell<Author>(){
+                    @Override
+                    protected void updateItem(Author author, boolean bln) {
+                        super.updateItem(author, bln);
+                         
+                        if(author != null){
+                            setText(author.getFirstName() + " " + author.getLastName());
+                        } else {
+                            setText(null);
+                        }
+                    }
+  
+                };
+                 
+                return cell;
+			}
+        	
+        });
+        listAuthor.setItems(FXCollections.observableList(new TestData().allAuthors));
     }  
     
     @FXML
     private void btnSaveAction(ActionEvent event) {        
         //Validation  
-//        if (!validate())
-//            return;        
-//        
-//        //if The data is valid
-//        Book book = new Book();
-//        book.setIsbn(txtISBN.getText());
-//        book.setTitle(txtTitle.getText());
-//        System.out.println("Continue Implement Save");
-//        
-//        List<BookCopy> copiesList = new ArrayList<>();   
-//        
-//        BookDao bookDao = new BookDao();       
-//        try {
-//            bookDao.addBook(book);
-//            Message.showSuccessMessage("Add Book", "Saving Book Sucess", "");            
-//        } catch (IOException ex) {
-//            Message.showErrorMessage("Add Book", "Saving Book Failed. Exception message: ",  ex.getMessage());          
-//            
-//        }
+        if (!validate())
+            return;        
+        List<Author> authors = new ArrayList<Author>();
+        for(Author a : listAuthor.getSelectionModel().getSelectedItems()) {
+        	authors.add(a);
+        }
+        //if The data is valid
+        Book book = new Book(
+			txtISBN.getText(),
+			txtTitle.getText(),
+			cmbCheckoutLength.getSelectionModel().getSelectedItem(),
+			authors
+        );
+        
+        ControllerInterface ci = new SystemController();
+        try {
+            ci.addBook(book);
+            Message.showSuccessMessage("Add Book", "Saving Book Sucess", "");
+            clear();
+        } catch (Exception ex) {
+            Message.showErrorMessage("Add Book", "Saving Book Failed. Exception message: ",  ex.getMessage());          
+            
+        }
+    }
+    
+    void clear() {
+    	txtISBN.setText("");
+    	txtTitle.setText("");
+    	cmbCheckoutLength.getSelectionModel().clearSelection();
+    	listAuthor.getSelectionModel().clearSelection();
+    	cmbCheckoutLength.setValue(7);
     }
     
     @Override
