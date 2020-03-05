@@ -14,7 +14,7 @@
 	prefWidth="600.0"
 	xmlns="http://javafx.com/javafx/11.0.1"
 	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="ui.controllers.AddMemberController"
+	fx:controller="ui.controllers.FormMemberController"
 >
    <children>
       <GridPane layoutY="-1.0" prefHeight="428.0" prefWidth="600.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">

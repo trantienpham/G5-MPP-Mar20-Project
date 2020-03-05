@@ -46,9 +46,13 @@ public class LoginController {
     	try {
 			ControllerInterface c = new SystemController();
 			User u = c.authenticate(txtUserName.getText().trim(), txtPassword.getText().trim());
-			showDashboard(u);
+			if (u != null) {
+				showDashboard(u);
+			} else {
+				Message.showErrorMessage("Library System", "Invalid User/Password", "Username or Password invalid!");
+			}
 		} catch(LoginException ex) {
-			Message.showErrorMessage("Library System", "Invalid User/Password", "Username or Password invalid!");
+			Message.showErrorMessage("Library System", "Error", "There is an error during processing.");
 		}
     }
     

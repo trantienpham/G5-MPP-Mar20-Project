@@ -3,6 +3,7 @@ package ui.controllers;
 import java.util.Optional;
 
 import business.Auth;
+import business.LibraryMember;
 import business.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -49,7 +50,8 @@ public class DashboardController {
 		this.user = user;
 	}
 	public void initialize() {
-        String role;       
+        Auth auth = this.user.getAuthorization();
+        String role = "";
         checkoutButton.setDisable(true);
         checkoutRecordButton.setDisable(true);
         addMemberButton.setDisable(true);
@@ -62,27 +64,31 @@ public class DashboardController {
         else
             role = user.getAuthorization().toString();
         userLoggedLabel.setText(user.getId() + " (" + role.toLowerCase() + ")");
-        if ((user.getAuthorization() == Auth.ADMIN) || (user.getAuthorization() == Auth.BOTH) ) {
+        if ((auth == Auth.ADMIN) || (auth == Auth.BOTH) ) {
             addMemberButton.setDisable(false);
             editMemberButton.setDisable(false);
         }
 
-        if ((user.getAuthorization() == Auth.LIBRARIAN) || (user.getAuthorization() == Auth.BOTH) ) {
+        if ((auth == Auth.LIBRARIAN) || (auth == Auth.BOTH) ) {
             checkoutButton.setDisable(false);
             checkoutRecordButton.setDisable(false);
+            addBookButton.setDisable(false);
+            books.setDisable(false);
         }
 	}
 	public User getUser() {
 		return user;
 	}
-	private void launchForm(String formURL) throws Exception {
+	private Object launchForm(String formURL) throws Exception {
        Stage stage = new Stage();
-       Parent root = FXMLLoader.load(getClass().getResource(formURL));
+       FXMLLoader loader = new FXMLLoader(getClass().getResource(formURL));
+       Parent root = (Parent) loader.load();
        root.setStyle("-fx-background-color:  #8EC6E7");
        Scene scene = new Scene(root);
        stage.setScene(scene);
        stage.setResizable(false);
        stage.show();
+       return loader.getController();
 	}
     @FXML
     public void handleLogoffButtonAction(ActionEvent event) throws Exception {
@@ -115,11 +121,14 @@ public class DashboardController {
     
     @FXML
     public void handleAddMemberButtonAction(ActionEvent event) throws Exception {
-    	launchForm("/ui/views/AddMember.fxml");
+    	launchForm("/ui/views/FormMember.fxml");
     }
     
     @FXML
     public void handleEditMemberButtonAction(ActionEvent event) throws Exception {
+    	FormMemberController controller = (FormMemberController) launchForm("/ui/views/FormMember.fxml");
+        LibraryMember member = null;
+        controller.setMember(member);
     }
 
     @FXML
@@ -137,6 +146,7 @@ public class DashboardController {
         Stage dashboardStage = (Stage) closeButton.getScene().getWindow();
     	FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/views/Login.fxml"));
     	Parent root = (Parent) loader.load();
+    	root.setStyle("-fx-background-color:  #8EC6E7");
     	Scene scene = new Scene(root);
     	loginStage.setScene(scene);
     	loginStage.setResizable(false);

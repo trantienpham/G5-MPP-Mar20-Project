@@ -14,7 +14,7 @@ import javafx.scene.control.TextField;
 import utils.Message;
 import utils.Validators;
 
-public class AddMemberController extends FormBaseController {
+public class FormMemberController extends FormBaseController {
     @FXML
     private ComboBox<String> state;
     
@@ -38,6 +38,10 @@ public class AddMemberController extends FormBaseController {
     
     @FXML   
     private TextField zip;
+    
+    private LibraryMember member;
+    
+    public FormMemberController() {}
 
 	public void initialize() {
 		state.getItems().clear();
@@ -202,5 +206,13 @@ public class AddMemberController extends FormBaseController {
             return true;        
         return false;
     }
+
+	public LibraryMember getMember() {
+		return member;
+	}
+
+	public void setMember(LibraryMember member) {
+		this.member = member;
+	}
 
 }
