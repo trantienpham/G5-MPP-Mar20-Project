@@ -1,12 +1,13 @@
 package ui.controllers;
 
 import business.Book;
-import business.ControllerInterface;
-import business.SystemController;
+import business.RepositoryFactory;
+import business.RepositoryInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
 import utils.Message;
 import utils.Validators;
 
@@ -24,6 +25,11 @@ public class BookCopyController extends FormBaseController {
     private Button addButton;
     
     private Book book;
+    private RepositoryInterface<Book> bookRepository;
+	
+	public BookCopyController() {
+		bookRepository = RepositoryFactory.getBookRepository();
+	}
 
 	public void initialize() {
 		isbnField.setDisable(true);        
@@ -37,9 +43,8 @@ public class BookCopyController extends FormBaseController {
             return;   
         
         try {
-        	ControllerInterface ci = new SystemController();
             this.book.addCopy();
-            ci.saveBook(this.book);
+            bookRepository.save(this.book);
             Message.showSuccessMessage("Add Book Copy", "Book Copy Added Sucessfully to book", ""); 
         } catch (Exception ex) {
             Message.showErrorMessage("Add Book", "Saving Book Copy Failed. Exception message: ",  ex.getMessage());                      
@@ -64,6 +69,17 @@ public class BookCopyController extends FormBaseController {
             invalidFields.remove("Copy Number");
             copyNumField.setStyle(VALID_STYLE_BORDER);
         }
+    }
+    
+    private Callback<String, String> callback;
+    public void setReloadBooksHandler(Callback<String, String> callback) {
+    	this.callback = callback;
+    }
+    
+    @Override
+    public void handleCancelButtonAction(ActionEvent event) {
+    	if (this.callback != null) this.callback.call(null);
+    	super.handleCancelButtonAction(event);
     }
     
     //Fields validation methods:

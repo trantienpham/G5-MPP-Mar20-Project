@@ -1,8 +1,8 @@
 package ui.controllers;
 
-import business.ControllerInterface;
+import business.AuthServiceInterface;
 import business.LoginException;
-import business.SystemController;
+import business.RepositoryFactory;
 import business.SystemUser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +25,12 @@ public class LoginController {
     public Button btnCancel;
     @FXML
     private Button btnSignIn;
+	
+    private AuthServiceInterface authService = null;
+    
+    public LoginController() {
+    	authService = RepositoryFactory.getAuthService();
+    }
 
 	public void initialize() {}
     @FXML
@@ -44,10 +50,9 @@ public class LoginController {
     @FXML
     public void handleSignInButtonAction() throws Exception {
     	try {
-			ControllerInterface c = new SystemController();
-			SystemUser u = c.login(txtUserName.getText().trim(), txtPassword.getText().trim());
-			if (u != null) {
-				showDashboard(u);
+			SystemUser systemUser = authService.login(txtUserName.getText().trim(), txtPassword.getText().trim());
+			if (systemUser != null) {
+				gotoDashboard(systemUser);
 			} else {
 				Message.showErrorMessage("Library System", "Invalid User/Password", "Username or Password invalid!");
 			}
@@ -56,7 +61,7 @@ public class LoginController {
 		}
     }
     
-    private void showDashboard(SystemUser user) throws Exception {
+    private void gotoDashboard(SystemUser user) throws Exception {
     	Stage dashboardStage = new Stage();
     	Stage loginStage = (Stage) btnCancel.getScene().getWindow();
     	FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/views/Dashboard.fxml"));

@@ -2,8 +2,9 @@ package ui.controllers;
 
 import java.util.Optional;
 
+import business.AuthServiceInterface;
 import business.AuthorizationLevel;
-import business.SystemController;
+import business.RepositoryFactory;
 import business.SystemUser;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -46,8 +47,12 @@ public class DashboardController {
     private Label userLoggedLabel;
     
     private SystemUser user;
+
+    AuthServiceInterface authService;
+
 	public DashboardController(SystemUser user) {
 		this.user = user;
+		this.authService = RepositoryFactory.getAuthService();
 	}
 	public void initialize() {
         AuthorizationLevel auth = this.user.getAuthorization();
@@ -89,7 +94,7 @@ public class DashboardController {
 	}
     @FXML
     public void handleLogoffButtonAction(ActionEvent event) throws Exception {
-    	SystemController.currentAuth = null;
+    	this.authService.logout();
     	showLogin();
     }
 
