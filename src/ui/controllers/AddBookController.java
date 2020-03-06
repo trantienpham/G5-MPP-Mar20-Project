@@ -85,7 +85,7 @@ public class AddBookController extends FormBaseController {
         
         ControllerInterface ci = new SystemController();
         try {
-            ci.addBook(book);
+            ci.saveBook(book);
             Message.showSuccessMessage("Add Book", "Saving Book Sucess", "");
             clear();
         } catch (Exception ex) {

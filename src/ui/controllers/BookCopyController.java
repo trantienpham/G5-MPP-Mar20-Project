@@ -1,12 +1,16 @@
 package ui.controllers;
 
+import business.Book;
+import business.ControllerInterface;
+import business.SystemController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import utils.Message;
 import utils.Validators;
 
-public class AddBookCopyController extends FormBaseController {
+public class BookCopyController extends FormBaseController {
     @FXML
     private TextField isbnField;
     
@@ -18,6 +22,8 @@ public class AddBookCopyController extends FormBaseController {
     
     @FXML
     private Button addButton;
+    
+    private Book book;
 
 	public void initialize() {
 		isbnField.setDisable(true);        
@@ -26,33 +32,25 @@ public class AddBookCopyController extends FormBaseController {
 	
 	@FXML
     private void btnAddBookCopyAction(ActionEvent event) {
-        
         //Validation  
-        if ( !validate() ) // if not valid don't continu, just return to the form
+        if ( !validate() || this.book == null)
             return;   
         
-//        BookCopy copy = new BookCopy();
-//        copy.setCopynumber(copyNumField.getText());
-//        copy.setIsbn(isbnField.getText());
-//        Book book = new Book();
-//        book.setIsbn(isbnField.getText());
-//        copy.setBook(book);
-//        copy.setAvailable(true);
-//        try {
-//            bookCopyDao.addBookCopy(copy);
-//             Message.showSuccessMessage("Add Book Copy", "Book Copy Added Sucessfully to book", ""); 
-//        } catch (IOException ex) {
-//            Message.showErrorMessage("Add Book", "Saving Book Copy Failed. Exception message: ",  ex.getMessage());                      
-//        }
+        try {
+        	ControllerInterface ci = new SystemController();
+            this.book.addCopy();
+            ci.saveBook(this.book);
+            Message.showSuccessMessage("Add Book Copy", "Book Copy Added Sucessfully to book", ""); 
+        } catch (Exception ex) {
+            Message.showErrorMessage("Add Book", "Saving Book Copy Failed. Exception message: ",  ex.getMessage());                      
+        }
     }
-
-    public TextField getIsbnField() {
-        return isbnField;
-    }
-
-    public TextField getTitleField() {
-        return titleField;
-    }
+	
+	public void setBook(Book book) {
+		this.book = book;
+		isbnField.setText(book.getIsbn());
+		titleField.setText(book.getTitle());
+	}
 
     @Override
     void validateAllFields() {

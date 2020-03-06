@@ -29,6 +29,7 @@ public class TestData {
 		td.bookData();
 		td.libraryMemberData();
 		td.userData();
+		DataAccessFacade.createFilesEmpty();
 		DataAccess da = new DataAccessFacade();
 		System.out.println(da.readBooksMap());
 		System.out.println(da.readUserMap());

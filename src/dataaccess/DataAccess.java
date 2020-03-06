@@ -15,5 +15,7 @@ public interface DataAccess {
 	public HashMap<String, CheckoutEntry> readCheckoutEntryMap();
 	public HashMap<String, CheckoutRecord> readCheckoutRecordMap();
 	public void saveNewMember(LibraryMember member);
-	public void saveNewBook(Book book);
+	public void saveBook(Book book);
+	public void saveCheckoutRecord(CheckoutRecord cr);
+	public void saveCheckoutEntry(CheckoutEntry ce);
 }

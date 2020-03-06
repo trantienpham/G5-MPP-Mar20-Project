@@ -16,7 +16,7 @@
 	style="-fx-background-color: #8EC6E7;"
 	xmlns="http://javafx.com/javafx/11.0.1"
 	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="ui.controllers.AddBookCopyController"
+	fx:controller="ui.controllers.BookCopyController"
 >
     <stylesheets>
         <URL value="@/system.css" />

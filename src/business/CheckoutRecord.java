@@ -1,6 +1,7 @@
 package business;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("serial")
@@ -10,6 +11,10 @@ public class CheckoutRecord implements Serializable{
     private List<CheckoutEntry> checkoutEntries;//ChecoutRecord consists of many of entries 
     private List<Fine> fines;   
 
+    public CheckoutRecord() {
+    	checkoutEntries = new ArrayList<CheckoutEntry>();
+    	fines = new ArrayList<Fine>();
+    }
     public LibraryMember getLibraryMember() {
         return libraryMember;
     }

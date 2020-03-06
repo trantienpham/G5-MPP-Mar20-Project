@@ -9,9 +9,11 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 
+import business.Author;
 import business.Book;
 import business.CheckoutEntry;
 import business.CheckoutRecord;
+import business.Fine;
 import business.LibraryMember;
 import business.User;
 
@@ -19,7 +21,7 @@ import business.User;
 public class DataAccessFacade implements DataAccess {
 	
 	enum StorageType {
-		BOOKS, COPIED_BOOKS, MEMBERS, AUTHORS, CHECKOUT_RECORDS, CHECKOUT_ENTRIES, USERS, FINES;
+		BOOKS, MEMBERS, AUTHORS, CHECKOUT_RECORDS, CHECKOUT_ENTRIES, USERS, FINES;
 	}
 	
 	public static final String SEPARATOR = System.getProperty("file.separator");
@@ -37,11 +39,26 @@ public class DataAccessFacade implements DataAccess {
 	}
 	
 	@Override
-	public void saveNewBook(Book book) {
+	public void saveBook(Book book) {
 		HashMap<String, Book> books = readBooksMap();
 		String isbn = book.getIsbn();
 		books.put(isbn, book);
 		saveToStorage(StorageType.BOOKS, books);	
+	}
+	
+	@Override
+	public void saveCheckoutRecord(CheckoutRecord cr) {
+		HashMap<String, CheckoutRecord> records = readCheckoutRecordMap();
+		String id = cr.getId();
+		records.put(id, cr);
+		saveToStorage(StorageType.CHECKOUT_RECORDS, records);
+	}
+	@Override
+	public void saveCheckoutEntry(CheckoutEntry ce) {
+		HashMap<String, CheckoutEntry> entries = readCheckoutEntryMap();
+		String id = ce.getId();
+		entries.put(id, ce);
+		saveToStorage(StorageType.CHECKOUT_ENTRIES, entries);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -69,7 +86,9 @@ public class DataAccessFacade implements DataAccess {
 	
 	@SuppressWarnings("unchecked")
 	public HashMap<String, CheckoutEntry> readCheckoutEntryMap() {
-		return (HashMap<String, CheckoutEntry>)readFromStorage(StorageType.CHECKOUT_ENTRIES);
+		HashMap<String, CheckoutEntry> data = (HashMap<String, CheckoutEntry>)readFromStorage(StorageType.CHECKOUT_ENTRIES);
+		if (data == null) data = new HashMap<String, CheckoutEntry>();
+		return data;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -100,6 +119,20 @@ public class DataAccessFacade implements DataAccess {
 		HashMap<String, LibraryMember> members = new HashMap<String, LibraryMember>();
 		memberList.forEach(member -> members.put(member.getMemberId(), member));
 		saveToStorage(StorageType.MEMBERS, members);
+	}
+	
+	static void createFilesEmpty() {
+		HashMap<String, Author> authors = new HashMap<String, Author>();
+		saveToStorage(StorageType.AUTHORS, authors);
+		
+		HashMap<String, CheckoutEntry> entries = new HashMap<String, CheckoutEntry>();
+		saveToStorage(StorageType.CHECKOUT_ENTRIES, entries);
+		
+		HashMap<String, CheckoutRecord> records = new HashMap<String, CheckoutRecord>();
+		saveToStorage(StorageType.CHECKOUT_RECORDS, records);
+		
+		HashMap<String, Fine> fines = new HashMap<String, Fine>();
+		saveToStorage(StorageType.FINES, fines);
 	}
 	
 	static void saveToStorage(StorageType type, Object ob) {

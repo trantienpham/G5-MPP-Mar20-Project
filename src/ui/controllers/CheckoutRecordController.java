@@ -71,6 +71,15 @@ public class CheckoutRecordController extends FormBaseController {
         this.selectedBook = book.getSelectionModel().getSelectedItem();
         loadTableView();
     }
+    
+    @FXML
+    public void handleClearButtonAction(ActionEvent event) {
+    	this.selectedBook = null;
+    	this.selectedMember = null;
+    	book.getSelectionModel().clearSelection();
+    	member.getSelectionModel().clearSelection();
+    	loadTableView();
+    }
 
     public void handleTableViewDoubleClickAction() {
 
@@ -131,29 +140,18 @@ public class CheckoutRecordController extends FormBaseController {
     public void loadTableView() {
     	ControllerInterface ci = new SystemController();
         List<CheckoutEntry> entries = ci.allCheckoutEntries();
-        List<CheckoutRecord> records = ci.allCheckoutRecords();
-        
-//        for (int i = 0; i < entries.size(); i++) {
-//        	CheckoutRecord record = getCheckoutRecordByID(entries.get(i).getCheckoutRecord());
-//        	Book b = getBookByIsbn(entries.get(i).getBookCopy().getIsbn());
-//        	LibraryMember member = getLibraryMemberById(entries.get(i).getCheckoutRecord().getLibraryMember().getMemberId());
-//        	if (record != null)
-//        		entries.get(i).setCheckoutRecord(record);
-//            if (b != null)
-//            	entries.get(i).getBookCopy().setBook(b);
-//        	if (member != null)
-//        		entries.get(i).getCheckoutRecord().setLibraryMember(member);
-//        }
 
         int flag = 1;
         ArrayList<CheckoutEntry> filteredEntries = new ArrayList<>();
         for (int i = 0; i < entries.size(); i++) {
+            LibraryMember mem = entries.get(i).getCheckoutRecord().getLibraryMember();
+            Book b = entries.get(i).getBookCopy().getBook();
             flag = 1;
-            if (member.getValue() != null && !member.getValue().toString().equals("select") && !member.getValue().toString().equals(entries.get(i).getCheckoutRecord().getLibraryMember().getMemberId())) {
+            if (selectedMember != null && !selectedMember.getMemberId().equalsIgnoreCase(mem.getMemberId())) {
                 flag = 0;
             }
 
-            if (book.getValue() != null && !book.getValue().toString().equals("select") && !book.getValue().toString().equals(entries.get(i).getBookCopy().getBook().getIsbn())) {
+            if (selectedBook != null && !b.getIsbn().equalsIgnoreCase(selectedBook.getIsbn())) {
                 flag = 0;
             }
             
@@ -227,6 +225,18 @@ public class CheckoutRecordController extends FormBaseController {
 			}
         	
         });
+        member.setConverter(new StringConverter<LibraryMember>() {
+        	@Override
+        	public String toString(LibraryMember b) {
+        		if (b != null) return b.getFullname();
+        		return null;
+        	}
+
+			@Override
+			public LibraryMember fromString(String arg0) {
+				return null;
+			}
+        });
     }
     
     @SuppressWarnings("unchecked")
@@ -241,58 +251,27 @@ public class CheckoutRecordController extends FormBaseController {
 		book.setCellValueFactory(new PropertyValueFactory<CheckoutEntry, BookCopy>("bookCopy"));
 		Checkout_Date.setCellValueFactory(new PropertyValueFactory<CheckoutEntry, String>("checkoutDate"));
 		Return_Date.setCellValueFactory(new PropertyValueFactory<CheckoutEntry, String>("dueDate"));
-		member.setCellFactory(new Callback<TableColumn<CheckoutEntry, CheckoutRecord>, TableCell<CheckoutEntry, CheckoutRecord>>() {
-			@Override
-			public TableCell<CheckoutEntry, CheckoutRecord> call(TableColumn<CheckoutEntry, CheckoutRecord> p) {
-			    final TableCell<CheckoutEntry, CheckoutRecord> cell = new TableCell<CheckoutEntry, CheckoutRecord>() {
-			        @Override
-			        public void updateItem(final CheckoutRecord item, boolean empty) {
-			            super.updateItem(item, empty);
-			            if (empty) {
-			                this.setText("");
-			            } else {
-			                this.setText(item.getLibraryMember().getFirstName());
-			            }
-			        }
-			    };
-			    return cell;
-			}
-		});
-		book.setCellFactory(new Callback<TableColumn<CheckoutEntry, BookCopy>, TableCell<CheckoutEntry, BookCopy>>() {
-		    @Override
-		    public TableCell<CheckoutEntry, BookCopy> call(TableColumn<CheckoutEntry, BookCopy> p) {
-		        final TableCell<CheckoutEntry, BookCopy> cell = new TableCell<CheckoutEntry, BookCopy>() {
-		            @Override
-		            public void updateItem(final BookCopy item, boolean empty) {
-		                super.updateItem(item, empty);
-		                if (empty) {
-		                    this.setText("");
-		                } else {
-		                    this.setText(item.getBook().getTitle());
-		                }
+		member.setCellFactory(param -> {
+			return new TableCell<CheckoutEntry, CheckoutRecord>() {
+		        @Override
+		        public void updateItem(final CheckoutRecord item, boolean empty) {
+		            super.updateItem(item, empty);
+		            if (item != null) {
+		                setText(item.getLibraryMember().getFirstName() + " " + item.getLibraryMember().getLastName());
 		            }
-		        };
-		        return cell;
-		    }
+		        }
+		    };
 		});
-    }
-    
-    private Book getBookByIsbn(String isbn) {
-    	for(Book b : books) {
-    		if (b.getIsbn().equalsIgnoreCase(isbn)) return b;
-    	}
-    	return null;
-    }
-    private LibraryMember getLibraryMemberById(String id) {
-    	for (LibraryMember m : members) {
-    		if (m.getMemberId().equalsIgnoreCase(id)) return m;
-    	}
-    	return null;
-    }
-    private CheckoutRecord getCheckoutRecordByID(List<CheckoutRecord> records, String id) {
-    	for (CheckoutRecord r : records) {
-    		if (r.getId().equalsIgnoreCase(id)) return r;
-    	}
-    	return null;
+		book.setCellFactory(param -> {
+		    return new TableCell<CheckoutEntry, BookCopy>() {
+	            @Override
+	            public void updateItem(final BookCopy item, boolean empty) {
+	                super.updateItem(item, empty);
+	                if (item != null) {
+	                    setText(item.getBook().getTitle());
+	                }
+	            }
+	        };
+		});
     }
 }

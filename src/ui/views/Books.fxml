@@ -20,6 +20,7 @@
           <TableColumn prefWidth="136.0" style="-fx-alignment: CENTER;" text="ISBN" />
           <TableColumn prefWidth="243.0" style="-fx-alignment: CENTER;" text="Title" />
           <TableColumn prefWidth="226.0" style="-fx-alignment: CENTER;" text="Authors" />
+          <TableColumn prefWidth="226.0" style="-fx-alignment: CENTER;" text="Copy Numbers" />
           <TableColumn prefWidth="226.0" style="-fx-alignment: CENTER;" text="Add Copy" />
         </columns>
       </TableView>
