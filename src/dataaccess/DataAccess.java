@@ -6,11 +6,11 @@ import business.Book;
 import business.CheckoutEntry;
 import business.CheckoutRecord;
 import business.LibraryMember;
-import business.User;
+import business.SystemUser;
 
 public interface DataAccess { 
 	public HashMap<String,Book> readBooksMap();
-	public HashMap<String,User> readUserMap();
+	public HashMap<String,SystemUser> readUserMap();
 	public HashMap<String, LibraryMember> readMemberMap();
 	public HashMap<String, CheckoutEntry> readCheckoutEntryMap();
 	public HashMap<String, CheckoutRecord> readCheckoutRecordMap();

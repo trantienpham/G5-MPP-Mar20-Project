@@ -3,7 +3,7 @@ package ui.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import business.Auth;
+import business.AuthorizationLevel;
 import business.Book;
 import business.ControllerInterface;
 import business.SystemController;
@@ -70,7 +70,7 @@ public class BooksController {
                 }
             };
         });
-        boolean isVisible = SystemController.currentAuth != null && (SystemController.currentAuth == Auth.ADMIN || SystemController.currentAuth == Auth.BOTH);
+        boolean isVisible = SystemController.currentAuth != null && (SystemController.currentAuth == AuthorizationLevel.ADMIN || SystemController.currentAuth == AuthorizationLevel.BOTH);
         add_copy.setVisible(isVisible);
         add_copy.setCellValueFactory(param -> {
         	CellDataFeatures<Book, Book> cellData = (CellDataFeatures<Book, Book>) param;
@@ -107,6 +107,7 @@ public class BooksController {
 	private void loadBooks() {
         ControllerInterface ci = new SystemController();
         List<Book> books = ci.allBooks();
+        booksTableView.getItems().clear();
         booksTableView.setItems(FXCollections.observableList(books));
 	}
 	private <T> TableColumn<T, ?> getTableColumnByName(TableView<T> tableView, String name) {
@@ -126,6 +127,10 @@ public class BooksController {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
+        stage.setOnCloseRequest(param -> {
+        	loadBooks();
+            booksTableView.refresh();
+        });
         stage.show();
     }
 }

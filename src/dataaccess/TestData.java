@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import business.Address;
-import business.Auth;
+import business.AuthorizationLevel;
 import business.Author;
 import business.Book;
 import business.LibraryMember;
-import business.User;
+import business.SystemUser;
 
 /**
  * This class loads data into the data repository and also
@@ -36,12 +36,12 @@ public class TestData {
 	}
 	///create books
 	public void bookData() {
-		allBooks.get(0).addCopy();
-		allBooks.get(0).addCopy();
-		allBooks.get(1).addCopy();
-		allBooks.get(3).addCopy();
-		allBooks.get(2).addCopy();
-		allBooks.get(2).addCopy();
+//		allBooks.get(0).addCopy();
+//		allBooks.get(0).addCopy();
+//		allBooks.get(1).addCopy();
+//		allBooks.get(3).addCopy();
+//		allBooks.get(2).addCopy();
+//		allBooks.get(2).addCopy();
 		DataAccessFacade.loadBookMap(allBooks);
 	}
 	
@@ -103,11 +103,11 @@ public class TestData {
 	};
 	
 	@SuppressWarnings("serial")
-	List<User> allUsers = new ArrayList<User>() {
+	List<SystemUser> allUsers = new ArrayList<SystemUser>() {
 		{
-			add(new User("101", "xyz", Auth.LIBRARIAN));
-			add(new User("102", "abc", Auth.ADMIN));
-			add(new User("103", "111", Auth.BOTH));
+			add(new SystemUser("101", "xyz", AuthorizationLevel.LIBRARIAN));
+			add(new SystemUser("102", "abc", AuthorizationLevel.ADMIN));
+			add(new SystemUser("103", "111", AuthorizationLevel.BOTH));
 		}
 	};
 }

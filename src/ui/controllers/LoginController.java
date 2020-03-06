@@ -3,7 +3,7 @@ package ui.controllers;
 import business.ControllerInterface;
 import business.LoginException;
 import business.SystemController;
-import business.User;
+import business.SystemUser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +45,7 @@ public class LoginController {
     public void handleSignInButtonAction() throws Exception {
     	try {
 			ControllerInterface c = new SystemController();
-			User u = c.authenticate(txtUserName.getText().trim(), txtPassword.getText().trim());
+			SystemUser u = c.login(txtUserName.getText().trim(), txtPassword.getText().trim());
 			if (u != null) {
 				showDashboard(u);
 			} else {
@@ -56,7 +56,7 @@ public class LoginController {
 		}
     }
     
-    private void showDashboard(User user) throws Exception {
+    private void showDashboard(SystemUser user) throws Exception {
     	Stage dashboardStage = new Stage();
     	Stage loginStage = (Stage) btnCancel.getScene().getWindow();
     	FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/views/Dashboard.fxml"));

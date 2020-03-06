@@ -79,15 +79,15 @@ public class LoginWindow extends Stage implements LibWindow {
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
         	@Override
         	public void handle(ActionEvent e) {
-        		try {
-        			ControllerInterface c = new SystemController();
-        			c.login(userTextField.getText().trim(), pwBox.getText().trim());
-        			messageBar.setFill(Start.Colors.green);
-             	    messageBar.setText("Login successful");
-        		} catch(LoginException ex) {
-        			messageBar.setFill(Start.Colors.red);
-        			messageBar.setText("Error! " + ex.getMessage());
-        		}
+//        		try {
+//        			ControllerInterface c = new SystemController();
+//        			c.login(userTextField.getText().trim(), pwBox.getText().trim());
+//        			messageBar.setFill(Start.Colors.green);
+//             	    messageBar.setText("Login successful");
+//        		} catch(LoginException ex) {
+//        			messageBar.setFill(Start.Colors.red);
+//        			messageBar.setText("Error! " + ex.getMessage());
+//        		}
         	   
         	}
         });
