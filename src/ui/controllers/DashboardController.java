@@ -2,9 +2,10 @@ package ui.controllers;
 
 import java.util.Optional;
 
-import business.Auth;
-import business.SystemController;
-import business.User;
+import business.AuthServiceInterface;
+import business.AuthorizationLevel;
+import business.RepositoryFactory;
+import business.SystemUser;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,12 +46,16 @@ public class DashboardController {
     @FXML
     private Label userLoggedLabel;
     
-    private User user;
-	public DashboardController(User user) {
+    private SystemUser user;
+
+    AuthServiceInterface authService;
+
+	public DashboardController(SystemUser user) {
 		this.user = user;
+		this.authService = RepositoryFactory.getAuthService();
 	}
 	public void initialize() {
-        Auth auth = this.user.getAuthorization();
+        AuthorizationLevel auth = this.user.getAuthorization();
         String role = "";
         checkoutButton.setDisable(true);
         checkoutRecordButton.setDisable(true);
@@ -58,23 +63,23 @@ public class DashboardController {
         memberButton.setDisable(true);
         addBookButton.setDisable(true);
         
-        if (user.getAuthorization() == Auth.BOTH)
+        if (user.getAuthorization() == AuthorizationLevel.BOTH)
             role = "ADMINISTRATOR/LIBRARIAN";
         else
             role = user.getAuthorization().toString();
         userLoggedLabel.setText(user.getId() + " (" + role.toLowerCase() + ")");
-        if ((auth == Auth.ADMIN) || (auth == Auth.BOTH) ) {
+        if ((auth == AuthorizationLevel.ADMIN) || (auth == AuthorizationLevel.BOTH) ) {
             addMemberButton.setDisable(false);
             addBookButton.setDisable(false);
             memberButton.setDisable(false);
         }
 
-        if ((auth == Auth.LIBRARIAN) || (auth == Auth.BOTH) ) {
+        if ((auth == AuthorizationLevel.LIBRARIAN) || (auth == AuthorizationLevel.BOTH) ) {
             checkoutButton.setDisable(false);
             checkoutRecordButton.setDisable(false);
         }
 	}
-	public User getUser() {
+	public SystemUser getUser() {
 		return user;
 	}
 	private void launchForm(String formURL) throws Exception {
@@ -89,7 +94,7 @@ public class DashboardController {
 	}
     @FXML
     public void handleLogoffButtonAction(ActionEvent event) throws Exception {
-    	SystemController.currentAuth = null;
+    	this.authService.logout();
     	showLogin();
     }
 

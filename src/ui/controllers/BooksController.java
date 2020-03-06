@@ -3,10 +3,11 @@ package ui.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import business.Auth;
+import business.AuthServiceInterface;
+import business.AuthorizationLevel;
 import business.Book;
-import business.ControllerInterface;
-import business.SystemController;
+import business.RepositoryFactory;
+import business.RepositoryInterface;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -23,17 +24,39 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import utils.TableColumnUtil;
 
 public class BooksController {
     @FXML
     private TableView<Book> booksTableView;
-	@SuppressWarnings("unchecked")
+    
+    private RepositoryInterface<Book> bookRepository;
+    private AuthServiceInterface authService;
+
+    public BooksController() {
+    	bookRepository = RepositoryFactory.getBookRepository();
+    	authService = RepositoryFactory.getAuthService();
+    }
+    
 	public void initialize() {
-        TableColumn<Book, String> isbn = (TableColumn<Book, String>) getTableColumnByName(booksTableView, "ISBN");
-        TableColumn<Book, String> title = (TableColumn<Book, String>) getTableColumnByName(booksTableView, "Title");
-        TableColumn<Book, Book> authors = (TableColumn<Book, Book>) getTableColumnByName(booksTableView, "Authors");
-        TableColumn<Book, Book> copyNumber = (TableColumn<Book, Book>) getTableColumnByName(booksTableView, "Copy Numbers");
-        TableColumn<Book, Book> add_copy = (TableColumn<Book, Book>) getTableColumnByName(booksTableView, "Add Copy");
+		initComponents();
+        loadBooks();
+	}
+
+	private void loadBooks() {
+        List<Book> books = bookRepository.getAll();
+        booksTableView.getItems().clear();
+        booksTableView.setItems(FXCollections.observableList(books));
+	}
+
+	@SuppressWarnings("unchecked")
+	private void initComponents() {
+		TableColumn<Book, String> isbn = (TableColumn<Book, String>) TableColumnUtil.getTableColumnByName(booksTableView, "ISBN");
+        TableColumn<Book, String> title = (TableColumn<Book, String>) TableColumnUtil.getTableColumnByName(booksTableView, "Title");
+        TableColumn<Book, Book> authors = (TableColumn<Book, Book>) TableColumnUtil.getTableColumnByName(booksTableView, "Authors");
+        TableColumn<Book, Book> copyNumber = (TableColumn<Book, Book>) TableColumnUtil.getTableColumnByName(booksTableView, "Copy Numbers");
+        TableColumn<Book, Book> add_copy = (TableColumn<Book, Book>) TableColumnUtil.getTableColumnByName(booksTableView, "Add Copy");
         
         isbn.setCellValueFactory(new PropertyValueFactory<Book, String>("isbn"));
         title.setCellValueFactory(new PropertyValueFactory<Book, String>("title"));
@@ -70,7 +93,8 @@ public class BooksController {
                 }
             };
         });
-        boolean isVisible = SystemController.currentAuth != null && (SystemController.currentAuth == Auth.ADMIN || SystemController.currentAuth == Auth.BOTH);
+        AuthorizationLevel currentAuth = authService.getCurrentAuth();
+        boolean isVisible = currentAuth != null && (currentAuth == AuthorizationLevel.ADMIN || currentAuth == AuthorizationLevel.BOTH);
         add_copy.setVisible(isVisible);
         add_copy.setCellValueFactory(param -> {
         	CellDataFeatures<Book, Book> cellData = (CellDataFeatures<Book, Book>) param;
@@ -91,7 +115,7 @@ public class BooksController {
                             @Override
                             public void handle(ActionEvent event) {
                             	try {
-                            		showAddBookCopy(book);
+                            		openAddBookCopy(book);
                             	} catch(Exception e) {}
                             }
                         });
@@ -100,29 +124,21 @@ public class BooksController {
                 }
             };
         });
-        
-        loadBooks();
 	}
 
-	private void loadBooks() {
-        ControllerInterface ci = new SystemController();
-        List<Book> books = ci.allBooks();
-        booksTableView.setItems(FXCollections.observableList(books));
-	}
-	private <T> TableColumn<T, ?> getTableColumnByName(TableView<T> tableView, String name) {
-        for (TableColumn<T, ?> col : tableView.getColumns()) {
-            if (col.getText().equals(name)) {
-                return col;
-            }
-        }
-        return null;
-    }
-
-	public void showAddBookCopy(Book book) throws Exception {
+	public void openAddBookCopy(Book book) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui/views/BookCopy.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         BookCopyController controller = fxmlLoader.<BookCopyController>getController();
         controller.setBook(book);
+        controller.setReloadBooksHandler(new Callback<String, String>() {
+			@Override
+			public String call(String arg0) {
+				loadBooks();
+	            booksTableView.refresh();
+				return null;
+			}
+        });
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);

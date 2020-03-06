@@ -56,7 +56,7 @@
             <ComboBox fx:id="book" onAction="#handleBookFilterAction" prefHeight="26.0" prefWidth="228.0" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
          </children>
       </GridPane>
-      <TableView fx:id="tableView" layoutX="14.0" layoutY="100.0" onSort="#handleTableViewDoubleClickAction" prefHeight="244.0" prefWidth="580.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+      <TableView fx:id="tableView" layoutX="14.0" layoutY="100.0" prefHeight="244.0" prefWidth="580.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
         <columns>
           <TableColumn prefWidth="59.0" text="Checkout ID" />
           <TableColumn prefWidth="172.0" text="Member" />

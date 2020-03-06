@@ -5,8 +5,8 @@ import java.util.List;
 
 import business.Author;
 import business.Book;
-import business.ControllerInterface;
-import business.SystemController;
+import business.RepositoryFactory;
+import business.RepositoryInterface;
 import dataaccess.TestData;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -37,6 +37,11 @@ public class AddBookController extends FormBaseController {
     @FXML
     private ListView<Author> listAuthor;
     
+    private RepositoryInterface<Book> bookRepository;
+    
+    public AddBookController() {
+    	bookRepository = RepositoryFactory.getBookRepository();
+    }
      
     public void initialize() {        
         cmbCheckoutLength.getItems().addAll(7, 21);
@@ -83,9 +88,8 @@ public class AddBookController extends FormBaseController {
 			authors
         );
         
-        ControllerInterface ci = new SystemController();
         try {
-            ci.saveBook(book);
+            bookRepository.save(book);
             Message.showSuccessMessage("Add Book", "Saving Book Sucess", "");
             clear();
         } catch (Exception ex) {

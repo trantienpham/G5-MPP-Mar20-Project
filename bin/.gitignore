@@ -1,9 +1,4 @@
-/book_open-4.jpg
-/books.png
-/ui/
-/system.css
 /business/
-/utils/
 /dataaccess/
-/.DS_Store
-/docs/
+/ui/
+/utils/

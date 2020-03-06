@@ -2,6 +2,6 @@ package business;
 
 import java.io.Serializable;
 
-public enum Auth implements Serializable {
+public enum AuthorizationLevel implements Serializable {
 	LIBRARIAN, ADMIN, BOTH;
 }

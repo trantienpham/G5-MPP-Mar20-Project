@@ -2,37 +2,32 @@ package business;
 
 import java.io.Serializable;
 
-@SuppressWarnings("serial")
-public class SystemUser implements Serializable {    
-    
-    public enum AuthorizationLevel {ADMINISTRATOR, LIBRARIAN, BOTH};
-    
-    private AuthorizationLevel role;
-    private String username;
-    private String password;
+final public class SystemUser implements Serializable {
+	
+	private static final long serialVersionUID = 5147265048973262104L;
 
-    
-    public AuthorizationLevel getRole() {
-        return role;
-    }
-
-    public void setRole(AuthorizationLevel role) {
-        this.role = role;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	private String id;
+	
+	private String password;
+	private AuthorizationLevel authorization;
+	public SystemUser(String id, String pass, AuthorizationLevel  auth) {
+		this.id = id;
+		this.password = pass;
+		this.authorization = auth;
+	}
+	
+	public String getId() {
+		return id;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public AuthorizationLevel getAuthorization() {
+		return authorization;
+	}
+	@Override
+	public String toString() {
+		return "[" + id + ":" + password + ", " + authorization.toString() + "]";
+	}
+	
 }

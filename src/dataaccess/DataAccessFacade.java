@@ -15,7 +15,7 @@ import business.CheckoutEntry;
 import business.CheckoutRecord;
 import business.Fine;
 import business.LibraryMember;
-import business.User;
+import business.SystemUser;
 
 
 public class DataAccessFacade implements DataAccess {
@@ -78,10 +78,10 @@ public class DataAccessFacade implements DataAccess {
 	
 	
 	@SuppressWarnings("unchecked")
-	public HashMap<String, User> readUserMap() {
+	public HashMap<String, SystemUser> readUserMap() {
 		//Returns a Map with name/value pairs being
 		//   userId -> User
-		return (HashMap<String, User>)readFromStorage(StorageType.USERS);
+		return (HashMap<String, SystemUser>)readFromStorage(StorageType.USERS);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -109,8 +109,8 @@ public class DataAccessFacade implements DataAccess {
 		bookList.forEach(book -> books.put(book.getIsbn(), book));
 		saveToStorage(StorageType.BOOKS, books);
 	}
-	static void loadUserMap(List<User> userList) {
-		HashMap<String, User> users = new HashMap<String, User>();
+	static void loadUserMap(List<SystemUser> userList) {
+		HashMap<String, SystemUser> users = new HashMap<String, SystemUser>();
 		userList.forEach(user -> users.put(user.getId(), user));
 		saveToStorage(StorageType.USERS, users);
 	}

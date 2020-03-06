@@ -1,24 +1,23 @@
 package ui.controllers;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import business.Book;
-import business.ControllerInterface;
+import business.CheckoutInterface;
 import business.LibraryMember;
-import business.SystemController;
+import business.RepositoryFactory;
+import business.RepositoryInterface;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.text.Text;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import utils.Validators;
 
@@ -41,31 +40,32 @@ public class CheckoutController extends FormBaseController {
     
     @FXML
     private DatePicker dueDate;
+    
+    private RepositoryInterface<LibraryMember> memberRepository;
+    private RepositoryInterface<Book> bookRepository;
+    private CheckoutInterface checkoutRepository;
+    
+    public CheckoutController() {
+    	memberRepository = RepositoryFactory.getMemberRepository();
+    	bookRepository = RepositoryFactory.getBookRepository();
+    	checkoutRepository = RepositoryFactory.getCheckoutRecordRepository();
+    }
 
 	public void initialize() {
-		ControllerInterface ci = new SystemController();
-		List<LibraryMember> members = ci.allMembers();
-        member.setItems(FXCollections.observableArrayList(members));
-        member.setCellFactory(new Callback<ListView<LibraryMember>, ListCell<LibraryMember>>(){
-			@Override
-			public ListCell<LibraryMember> call(ListView<LibraryMember> book) {
-				final ListCell<LibraryMember> cell = new ListCell<LibraryMember>(){
-                    @Override
-                    protected void updateItem(LibraryMember b, boolean bln) {
-                        super.updateItem(b, bln);
-                         
-                        if(b != null){
-                            setText(b.getFirstName() + " " + b.getLastName());
-                        } else {
-                            setText(null);
-                        }
+        member.setCellFactory(param -> {
+			return new ListCell<LibraryMember>(){
+                @Override
+                protected void updateItem(LibraryMember b, boolean bln) {
+                    super.updateItem(b, bln);
+                     
+                    if(b != null){
+                        setText(b.getFirstName() + " " + b.getLastName());
+                    } else {
+                        setText(null);
                     }
-  
-                };
-                 
-                return cell;
-			}
-        	
+                }
+
+            };
         });
         member.setConverter(new StringConverter<LibraryMember>() {
         	@Override
@@ -91,34 +91,25 @@ public class CheckoutController extends FormBaseController {
             }
         });
 
-        List<Book> books = ci.allBooks();
-        List<Book> availableBook = new ArrayList<Book>();
-        for(Book b : books) {
-        	if (b.isAvailable()) {
-				availableBook.add(b);
-        	}
-        }
-        boxBook.setItems(FXCollections.observableArrayList(availableBook));
-        boxBook.setCellFactory(new Callback<ListView<Book>, ListCell<Book>>(){
-			@Override
-			public ListCell<Book> call(ListView<Book> book) {
-				final ListCell<Book> cell = new ListCell<Book>(){
-                    @Override
-                    protected void updateItem(Book b, boolean bln) {
-                        super.updateItem(b, bln);
-                         
-                        if(b != null){
-                            setText(b.getTitle() + " (" + b.getIsbn() + ")");
-                        } else {
-                            setText(null);
-                        }
+		List<LibraryMember> members = memberRepository.getAll();
+        member.setItems(FXCollections.observableArrayList(members));
+
+        List<Book> availableBooks = bookRepository.getAll().stream().filter(b -> b.isAvailable()).collect(Collectors.toList());
+        boxBook.setItems(FXCollections.observableArrayList(availableBooks));
+        boxBook.setCellFactory(param -> {
+			return new ListCell<Book>(){
+                @Override
+                protected void updateItem(Book b, boolean bln) {
+                    super.updateItem(b, bln);
+                     
+                    if(b != null){
+                        setText(b.getTitle() + " (" + b.getIsbn() + ")");
+                    } else {
+                        setText(null);
                     }
-  
-                };
-                 
-                return cell;
-			}
-        	
+                }
+
+            };
         });
         boxBook.setConverter(new StringConverter<Book>() {
         	@Override
@@ -142,56 +133,12 @@ public class CheckoutController extends FormBaseController {
         
         Book book = boxBook.getValue();
         LibraryMember mem = member.getValue();
+        LocalDate date = dueDate.getValue();
         if(book.isAvailable() && mem != null){
-        	ControllerInterface ci = new SystemController();
-        	ci.checkoutBookByMember(book, mem, dueDate.getValue());
+        	checkoutRepository.checkout(book, mem, date);
         	clear();
         }
     }
-
-    @FXML
-    public void handleExportButtonAction(ActionEvent event) {
-
-//        Stage stage = new Stage();
-//
-//        util.log("Exporting data to file .csv...");
-//
-//        String defaultFileName = "LibrarySystemExport.csv";
-//
-//        FileChooser fileChooser = new FileChooser();
-//        fileChooser.setTitle("Save file");
-//        fileChooser.setInitialFileName(defaultFileName);
-//        File savedFile = fileChooser.showSaveDialog(stage);
-//        if (savedFile != null) {
-//            try {
-//                saveFileRoutine(savedFile);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                //actionStatus.setText("An ERROR occurred while saving the file!");
-//                return;
-//            }
-//            //actionStatus.setText("File saved: " + savedFile.toString());
-//        } else {
-//            //actionStatus.setText("File save cancelled.");
-//        }
-//
-//        util.log("Export complete");
-    }
-
-//    private void saveFileRoutine(File file) throws Exception {
-//
-//        try {
-//            // Creates a new file and writes the txtArea contents into it
-//            String txt = "Text content";
-//
-//            file.createNewFile();
-//            FileWriter writer = new FileWriter(file);
-//            writer.write(txt);
-//            writer.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     @Override
     void validateAllFields() {        

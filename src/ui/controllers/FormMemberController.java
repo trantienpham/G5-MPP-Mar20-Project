@@ -3,18 +3,22 @@ package ui.controllers;
 import java.util.Random;
 
 import business.Address;
-import business.ControllerInterface;
 import business.LibraryMember;
-import business.SystemController;
+import business.RepositoryFactory;
+import business.RepositoryInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import utils.Message;
 import utils.Validators;
 
 public class FormMemberController extends FormBaseController {
+	@FXML
+	private Label labelHead;
+
     @FXML
     private ComboBox<String> state;
     
@@ -41,7 +45,11 @@ public class FormMemberController extends FormBaseController {
     
     private LibraryMember member;
     
-    public FormMemberController() {}
+    private RepositoryInterface<LibraryMember> memberRepository;
+    
+    public FormMemberController() {
+    	memberRepository = RepositoryFactory.getMemberRepository();
+    }
 
 	public void initialize() {
 		state.getItems().clear();
@@ -77,8 +85,7 @@ public class FormMemberController extends FormBaseController {
     		new Address(street.getText(),city.getValue().toString(),state.getValue().toString(),zip.getText())
         );
         try {
-        	ControllerInterface ci = new SystemController();
-            ci.saveNewMember(libraryMember);
+        	memberRepository.save(libraryMember);
             Message.showSuccessMessage("Add Member", "Saving Member Sucess", "");
             clear();
         } catch (Exception ex) {
@@ -222,6 +229,8 @@ public class FormMemberController extends FormBaseController {
 
 	public void setMember(LibraryMember member) {
 		this.member = member;
+		add.setText("Save");
+		labelHead.setText("Edit Member");
     	street.setText(this.member.getAddress().getStreet());
     	city.setValue(this.member.getAddress().getCity());
     	state.setValue(this.member.getAddress().getState());
