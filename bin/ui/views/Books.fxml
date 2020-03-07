@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane
+	id="AnchorPane"
+	prefHeight="438.0"
+	prefWidth="600.0"
+	xmlns="http://javafx.com/javafx/11.0.1"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="ui.controllers.BooksController"
+>
+   <children>
+      <TableView fx:id="booksTableView" layoutX="-9.0" prefHeight="44.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columns>
+          <TableColumn prefWidth="136.0" style="-fx-alignment: CENTER;" text="ISBN" />
+          <TableColumn prefWidth="243.0" style="-fx-alignment: CENTER;" text="Title" />
+          <TableColumn prefWidth="226.0" style="-fx-alignment: CENTER;" text="Authors" />
+          <TableColumn prefWidth="226.0" style="-fx-alignment: CENTER;" text="Copy Numbers" />
+          <TableColumn prefWidth="226.0" style="-fx-alignment: CENTER;" text="Add Copy" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
