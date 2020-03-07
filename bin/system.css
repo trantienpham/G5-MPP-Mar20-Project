@@ -12,3 +12,74 @@
 	-fx-padding: 10 20 10 20;
 	-fx-cursor: hand;
 }
+.btn-add-copy {
+	-fx-background-color: linear-gradient(#ffd65b, #e68400),
+		linear-gradient(#ffef84, #f2ba44), linear-gradient(#ffea6a, #efaa22),
+		linear-gradient(#ffe657 0%, #f8c202 50%, #eea10b 100%),
+		linear-gradient(from 0% 0% to 15% 50%, rgba(255, 255, 255, 0.9),
+		rgba(255, 255, 255, 0));
+	-fx-background-radius: 30;
+	-fx-background-insets: 0, 1, 2, 3, 0;
+	-fx-text-fill: #654b00;
+	-fx-cursor: hand;
+}
+.top-bar {
+	-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #dc143c, #32cd32);
+	-fx-border-style: solid;
+	-fx-border-width: 0 0 1 0;
+	-fx-border-color: #ddd;
+}
+.checkout-widget-bg {
+	-fx-background-image: url("checkout-book.jpeg");
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center center;
+	-fx-border-color: #ddd;
+	-fx-border-style: solid;
+	-fx-border-width: 1.0;
+	-fx-border-radius: 4.0;
+	-fx-background-size: 100% 100%;
+}
+.book-widget-bg {
+	-fx-background-image: url("books-1.jpeg");
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center center;
+	-fx-border-color: #ddd;
+	-fx-border-style: solid;
+	-fx-border-width: 1.0;
+	-fx-border-radius: 4.0;
+	-fx-background-size: 100% 100%;
+}
+.member-widget-bg {
+	-fx-background-image: url("members.jpg");
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center center;
+	-fx-border-color: #ddd;
+	-fx-border-style: solid;
+	-fx-border-width: 1.0;
+	-fx-border-radius: 4.0;
+	-fx-background-size: 100% 100%;
+}
+#btnAddCheckout, #btnAddBook, #btnAddMember {
+	-fx-background-image: url("add_white.png");
+	-fx-background-size: 100% 100%;
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center center;
+	-fx-background-color: linear-gradient(#ffd65b, #e68400),
+		linear-gradient(#ffef84, #f2ba44), linear-gradient(#ffea6a, #efaa22),
+		linear-gradient(#ffe657 0%, #f8c202 50%, #eea10b 100%),
+		linear-gradient(from 0% 0% to 15% 50%, rgba(255, 255, 255, 0.9),
+		rgba(255, 255, 255, 0));
+	-fx-cursor: hand;
+}
+#btnListCheckout, #btnListBook, #btnListMember {
+	-fx-background-image: url("list_all_white.png");
+	-fx-background-size: 100% 100%;
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center center;
+	-fx-background-color: linear-gradient(#ffd65b, #e68400),
+		linear-gradient(#ffef84, #f2ba44), linear-gradient(#ffea6a, #efaa22),
+		linear-gradient(#ffe657 0%, #f8c202 50%, #eea10b 100%),
+		linear-gradient(from 0% 0% to 15% 50%, rgba(255, 255, 255, 0.9),
+		rgba(255, 255, 255, 0));
+	-fx-cursor: hand;
+}

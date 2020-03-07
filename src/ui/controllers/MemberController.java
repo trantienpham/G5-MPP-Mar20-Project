@@ -72,6 +72,7 @@ public class MemberController {
 
                 {
                     button.setText("Edit");
+                    button.getStyleClass().add("btn-add-copy");
                 }
 
                 @Override
@@ -101,6 +102,11 @@ public class MemberController {
         Parent root = (Parent) loader.load();
         FormMemberController controller = loader.<FormMemberController>getController();
         controller.setMember(member);
+        controller.setReloadMembersHandler(x -> {
+        	loadMembers();
+        	membersTableView.refresh();
+        	return null;
+        });
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);

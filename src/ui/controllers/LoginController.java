@@ -70,7 +70,9 @@ public class LoginController {
     	Parent root = (Parent) loader.load();
     	Scene scene = new Scene(root);
     	dashboardStage.setScene(scene);
-    	dashboardStage.setResizable(false);
+    	dashboardStage.setResizable(true);
+    	dashboardStage.setWidth(700);
+    	dashboardStage.setHeight(500);
     	loginStage.close();
     	dashboardStage.show();
     }

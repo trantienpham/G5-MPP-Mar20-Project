@@ -16,32 +16,30 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 public class DashboardController {
     @FXML
-    private Button checkoutButton;
+    private Button btnAddCheckout;
 
     @FXML
-    private Button checkoutRecordButton;
+    private Button btnListCheckout;
 
     @FXML
-    private Button addMemberButton;
+    private Button btnAddMember;
 
     @FXML
-    private Button memberButton;
+    private Button btnListMember;
 
     @FXML
-    private Button addBookButton;
+    private Button btnAddBook;
 
     @FXML
-    private Button books;
+    private Button btnListBook;
 
     @FXML
     private Button logoffButton;
-
-    @FXML
-    public Button closeButton;
     
     @FXML
     private Label userLoggedLabel;
@@ -57,27 +55,49 @@ public class DashboardController {
 	public void initialize() {
         AuthorizationLevel auth = this.user.getAuthorization();
         String role = "";
-        checkoutButton.setDisable(true);
-        checkoutRecordButton.setDisable(true);
-        addMemberButton.setDisable(true);
-        memberButton.setDisable(true);
-        addBookButton.setDisable(true);
+        btnAddCheckout.setVisible(false);
+        btnListCheckout.setVisible(false);
+        btnAddMember.setVisible(false);
+        btnListMember.setVisible(false);
+        btnAddBook.setVisible(false);
         
         if (user.getAuthorization() == AuthorizationLevel.BOTH)
             role = "ADMINISTRATOR/LIBRARIAN";
         else
             role = user.getAuthorization().toString();
         userLoggedLabel.setText(user.getId() + " (" + role.toLowerCase() + ")");
+    	Tooltip tooltip = null;
         if ((auth == AuthorizationLevel.ADMIN) || (auth == AuthorizationLevel.BOTH) ) {
-            addMemberButton.setDisable(false);
-            addBookButton.setDisable(false);
-            memberButton.setDisable(false);
+        	tooltip = new Tooltip();
+        	tooltip.setText("Add Member");
+        	btnAddMember.setVisible(true);
+        	btnAddMember.setTooltip(tooltip);
+        	tooltip = new Tooltip();
+        	tooltip.setText("Add Book");
+        	btnAddBook.setVisible(true);
+        	btnAddBook.setTooltip(tooltip);
+        	tooltip = new Tooltip();
+        	tooltip.setText("List Members");
+        	btnListMember.setTooltip(tooltip);
+        	btnListMember.setVisible(true);
         }
 
         if ((auth == AuthorizationLevel.LIBRARIAN) || (auth == AuthorizationLevel.BOTH) ) {
-            checkoutButton.setDisable(false);
-            checkoutRecordButton.setDisable(false);
+        	tooltip = new Tooltip();
+        	tooltip.setText("Checkout");
+        	btnAddCheckout.setVisible(true);
+        	btnAddCheckout.setTooltip(tooltip);
+        	tooltip = new Tooltip();
+        	tooltip.setText("Checkout Records");
+        	btnListCheckout.setVisible(true);
+        	btnListCheckout.setTooltip(tooltip);
+        	if (auth == AuthorizationLevel.LIBRARIAN) {
+        		btnListBook.setLayoutX(5);
+        	}
         }
+    	tooltip = new Tooltip();
+    	tooltip.setText("List Book");
+    	btnListBook.setTooltip(tooltip);
 	}
 	public SystemUser getUser() {
 		return user;
@@ -144,7 +164,7 @@ public class DashboardController {
     
     private void showLogin() throws Exception {
     	Stage loginStage = new Stage();
-        Stage dashboardStage = (Stage) closeButton.getScene().getWindow();
+        Stage dashboardStage = (Stage) btnAddBook.getScene().getWindow();
     	FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/views/Login.fxml"));
     	Parent root = (Parent) loader.load();
     	root.setStyle("-fx-background-color:  #8EC6E7");

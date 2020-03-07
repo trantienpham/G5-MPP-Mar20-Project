@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
 import utils.Message;
 import utils.Validators;
 
@@ -70,7 +71,11 @@ public class FormMemberController extends FormBaseController {
                 "Chicago",
                 "San Diego");
 	}
-	
+	private Callback<String, String> callback;
+	public void setReloadMembersHandler(Callback<String, String> callback) {
+    	this.callback = callback;
+    }
+
 	@FXML
     private void addMember(ActionEvent event) {
         //Fields Validation        
@@ -78,7 +83,7 @@ public class FormMemberController extends FormBaseController {
             return; 
         
         LibraryMember libraryMember = new LibraryMember(
-    		String.valueOf(new Random().nextInt(1000)),
+    		this.member != null ? this.member.getMemberId() : String.valueOf(new Random().nextInt(1000)),
     		firstName.getText(),
     		lastName.getText(),
     		phoneNumber.getText(),
@@ -88,6 +93,7 @@ public class FormMemberController extends FormBaseController {
         	memberRepository.save(libraryMember);
             Message.showSuccessMessage("Add Member", "Saving Member Sucess", "");
             clear();
+            if (this.callback != null) this.callback.call(null);
         } catch (Exception ex) {
             Message.showErrorMessage("Add Member", "Saving Member Failed. Exception message: ",  ex.getMessage());          
             

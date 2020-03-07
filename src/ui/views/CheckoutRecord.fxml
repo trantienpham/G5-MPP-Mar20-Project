@@ -15,6 +15,7 @@
 	xmlns="http://javafx.com/javafx/11.0.1"
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="ui.controllers.CheckoutRecordController"
+	stylesheets="@/system.css"
 >
     <stylesheets>
         <URL value="@/system.css" />
@@ -29,8 +30,8 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="OK" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-            <Button fx:id="clearFilterButton" mnemonicParsing="false" text="Clear Filter" onAction="#handleClearButtonAction" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Button fx:id="cancelButton" styleClass="btn" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="OK" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Button fx:id="clearFilterButton" styleClass="btn" mnemonicParsing="false" text="Clear Filter" onAction="#handleClearButtonAction" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
       <GridPane layoutX="143.0" layoutY="14.0" prefHeight="93.0" prefWidth="580.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">

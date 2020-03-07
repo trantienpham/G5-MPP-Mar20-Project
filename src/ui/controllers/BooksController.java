@@ -106,6 +106,7 @@ public class BooksController {
 
                 {
                     button.setText("Add Copy");
+                    button.getStyleClass().add("btn-add-copy");
                 }
 
                 @Override
